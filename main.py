@@ -1,4 +1,5 @@
 from io import StringIO
+from matplotlib.pyplot import hist
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -53,6 +54,7 @@ def page3():
 
     df2 = df[cols]
     fig = sns.pairplot(df2)
+    fig.map_lower(sns.kdeplot, levels=4, color=".2")
 
     st.pyplot(fig)
 
