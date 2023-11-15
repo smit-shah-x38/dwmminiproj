@@ -2,6 +2,7 @@ from io import StringIO
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import seaborn as sns
 
 st.set_page_config(page_title='CSV Plotter', page_icon=':bar_chart:', layout="wide")
 
@@ -44,12 +45,26 @@ def page2():
             fig = px.bar(df, x=x_col, y=y_col)
         st.plotly_chart(fig)
 
+def page3():
+    df = st.session_state.get('df')
+    int_cols = df.select_dtypes(include=['int']).columns.tolist()
+    float_cols = df.select_dtypes(include=['float']).columns.tolist()
+    cols = int_cols + float_cols
+
+    df2 = df[cols]
+    fig = sns.pairplot(df2)
+
+    st.pyplot(fig)
+
+
 # Create the app
 st.sidebar.title('Navigation')
-page = st.sidebar.radio('Go to', ['Upload CSV', 'Plot Data'])
+page = st.sidebar.radio('Go to', ['Upload CSV', 'Plot Data', 'Generated Plots'])
 if page == 'Upload CSV':
     page1()
-else:
+elif page == 'Plot Data':
     page2()
+elif page == 'Generated Plots':
+    page3()
 
 
