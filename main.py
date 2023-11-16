@@ -1,6 +1,5 @@
 from io import StringIO
 from os import write
-from matplotlib.pyplot import hist
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -50,10 +49,18 @@ def page3():
     cols = df.columns
 
     df2 = df[cols]
-    fig = sns.pairplot(df2)
-    fig.map_lower(sns.lineplot)
 
-    st.pyplot(fig)
+    lowerplots = ['kde', 'line']
+
+    lower_selected = st.selectbox("Select the lower plot", lowerplots)
+    if st.button("Generate"):
+        fig = sns.pairplot(df2)
+        if lower_selected == 'kde':
+            fig.map_lower(sns.kdeplot)
+        else: 
+            fig.map_lower(sns.lineplot)
+
+        st.pyplot(fig)
 
 def page4():
     st.write("Database Cleaning")
