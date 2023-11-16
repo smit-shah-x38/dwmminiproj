@@ -1,11 +1,12 @@
 from io import StringIO
+from os import write
 from matplotlib.pyplot import hist
 import streamlit as st
 import pandas as pd
 import plotly.express as px
 import seaborn as sns
 
-st.set_page_config(page_title='CSV Plotter', page_icon=':bar_chart:', layout="wide")
+st.set_page_config(page_title='DWM Mini Project', page_icon=':bar_chart:', layout="wide")
 
 # Define the first page
 def page1():
@@ -26,14 +27,12 @@ def page1():
 
 def page2():
     df = st.session_state.get('df')
-    int_cols = df.select_dtypes(include=['int']).columns.tolist()
-    float_cols = df.select_dtypes(include=['float']).columns.tolist()
-
     col1, col2 = st.columns(2)
     with col1:
         # Create the dropdown menus
-        x_col = st.selectbox('Select an X-axis column', int_cols + float_cols)
-        y_col = st.selectbox('Select a Y-axis column', int_cols + float_cols)
+        cols = df.columns
+        x_col = st.selectbox('Select an X-axis column', cols)
+        y_col = st.selectbox('Select a Y-axis column', cols)
         graph_type = st.selectbox('Select a graph type', ['scatter', 'line', 'bar'])
     with col2:
 
@@ -48,25 +47,52 @@ def page2():
 
 def page3():
     df = st.session_state.get('df')
-    int_cols = df.select_dtypes(include=['int']).columns.tolist()
-    float_cols = df.select_dtypes(include=['float']).columns.tolist()
-    cols = int_cols + float_cols
+    cols = df.columns
 
     df2 = df[cols]
     fig = sns.pairplot(df2)
-    fig.map_lower(sns.kdeplot, levels=4, color=".2")
+    fig.map_lower(sns.lineplot)
 
     st.pyplot(fig)
 
+def page4():
+    st.write("Database Cleaning")
+    df2 = st.session_state.get('df')
+    cols = df2.columns
+    col5, col7, col8 = st.columns([1,1,1])
+
+    with col5:
+        options = ['drop', 'fill', 'global_const']
+
+        option_selected = st.selectbox('Select an option', options)
+        column_selected = st.selectbox('Select column', cols)
+
+        if option_selected == 'drop':
+            df2 = df2.drop(column_selected, axis=1)
+        elif option_selected == 'fill':
+            df2 = df2.fillna(inplace=True)
+        else:
+            val = st.text_input("Enter Global Const")
+            df2 = df2.fillna(value=val)
+
+    with col7:
+        df = st.session_state.get('df')
+        st.write("Old database:")
+        st.write(df)
+
+    with col8:
+        st.write("New database:")
+        st.write(df2)
 
 # Create the app
 st.sidebar.title('Navigation')
-page = st.sidebar.radio('Go to', ['Upload CSV', 'Plot Data', 'Generated Plots'])
+page = st.sidebar.radio('Go to', ['Upload CSV', 'Plot Data', 'Generated Plots', 'Database Manipulation'])
 if page == 'Upload CSV':
     page1()
 elif page == 'Plot Data':
     page2()
 elif page == 'Generated Plots':
     page3()
-
+elif page == 'Database Manipulation':
+    page4()
 
