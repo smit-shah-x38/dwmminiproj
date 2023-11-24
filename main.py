@@ -24,9 +24,10 @@ def page2():
     with col1:
         # Create the dropdown menus
         cols = df.columns
+        graph_types = ["scatter", "line", "bar"]
         x_col = st.selectbox("Select an X-axis column", cols)
         y_col = st.selectbox("Select a Y-axis column", cols)
-        graph_type = st.selectbox("Select a graph type", ["scatter", "line", "bar"])
+        graph_type = st.selectbox("Select a graph type", graph_types)
     with col2:
         # Plot the graph
         if graph_type == "scatter":
@@ -90,7 +91,8 @@ def page4():
 # Create the app
 st.sidebar.title("Navigation")
 page = st.sidebar.radio(
-    "Go to", ["Upload CSV", "Plot Data", "Generated Plots", "Database Manipulation"]
+    "Go to", ["Upload CSV", "Plot Data",
+              "Generated Plots", "Database Manipulation"]
 )
 if page == "Upload CSV":
     page1()
