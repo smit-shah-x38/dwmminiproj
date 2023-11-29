@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import seaborn as sns
+import io
 
 st.set_page_config(
     page_title="DWM Mini Project", page_icon=":bar_chart:", layout="wide"
@@ -88,11 +89,31 @@ def page4():
         st.write(df2)
 
 
+def page5():
+    df3 = st.session_state.get("df")
+    col55, col56 = st.columns([1, 1])
+    buffer = io.StringIO()
+    df3.info(buf=buffer)
+    s = buffer.getvalue()
+
+    with col55:
+        st.write(df3.describe())
+
+    with col56:
+        st.text(s)
+
+
 # Create the app
 st.sidebar.title("Navigation")
 page = st.sidebar.radio(
-    "Go to", ["Upload CSV", "Plot Data",
-              "Generated Plots", "Database Manipulation"]
+    "Functionalities",
+    [
+        "Upload CSV",
+        "Plot Data",
+        "Generated Plots",
+        "Database Manipulation",
+        "Database Description",
+    ],
 )
 if page == "Upload CSV":
     page1()
@@ -102,3 +123,5 @@ elif page == "Generated Plots":
     page3()
 elif page == "Database Manipulation":
     page4()
+elif page == "Database Description":
+    page5()
