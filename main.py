@@ -74,7 +74,7 @@ def page4():
         if option_selected == "drop":
             df2 = df2.drop(column_selected, axis=1)
         elif option_selected == "fill":
-            df2 = df2.fillna(inplace=True)
+            df2 = df2.fillna(inplace=True, value=1)
         else:
             val = st.text_input("Enter Global Const")
             df2 = df2.fillna(value=val)
