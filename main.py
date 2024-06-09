@@ -89,6 +89,7 @@ def page4():
         st.write(df2)
 
 
+
 def page5():
     df3 = st.session_state.get("df")
     col55, col56 = st.columns([1, 1])
@@ -125,3 +126,4 @@ elif page == "Database Manipulation":
     page4()
 elif page == "Database Description":
     page5()
+
